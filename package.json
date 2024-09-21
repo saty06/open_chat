@@ -18,6 +18,7 @@
     "react-icons": "^4.11.0",
     "react-router-dom": "^6.26.2",
     "react-scripts": "5.0.1",
+    "react-syntax-highlighter": "^15.5.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -26,11 +27,21 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-
-
   "devDependencies": {
     "autoprefixer": "^10.4.15",
     "postcss": "^8.4.29",
     "tailwindcss": "^3.3.3"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

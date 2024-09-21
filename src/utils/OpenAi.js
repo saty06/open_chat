@@ -1,25 +1,21 @@
 export const sendMsgToAI = async (msg) => {
-  const API_URL = "https://api.openai.com/v1/completions";
+  const API_URL = "https://x8ki-letl-twmt.n7.xano.io/api:EB-5HL6O/chatgpt";
 
   const requestOptions = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.REACT_APP_GPT_KEY}`,
     },
     body: JSON.stringify({
-      model: "text-davinci-003",
-      prompt: msg,
-      temperature: 0.2,
-      max_tokens: 2048,
-      n: 1,
-      stop: null,
+      input_test: msg,
     }),
   };
+
   try {
     const response = await (await fetch(API_URL, requestOptions)).json();
-    return response?.choices[0]?.text;
+    console.log(response); // Inspect the full response to check its structure.
+    return response; // Adjust this based on how the API response is structured.
   } catch (error) {
-    console.log(error);
+    console.log("Error:", error);
   }
 };

@@ -5,6 +5,7 @@ import userImage from './image/user.jpeg'
 
 function Chat() {
   const { message, msgEnd } = useContext(ContextApp);
+  console.log(" responce data ",message)
   return (
     <div className=" w-full h-[85%] flex items-center justify-center overflow-hidden overflow-y-auto px-2 py-1 scroll">
       <div className="w-full lg:w-4/5 flex flex-col h-full items-start justify-start">
