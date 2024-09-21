@@ -4,6 +4,7 @@ import { FiUser, FiMessageSquare } from "react-icons/fi";
 import { SlOptions } from "react-icons/sl";
 import { MdClose } from "react-icons/md";
 import { ContextApp } from "../utils/Context";
+import userImage from './image/user.jpeg'
 function Mobile() {
   const { Mobile, setMobile, handleQuery } = useContext(ContextApp);
   return (
@@ -62,11 +63,11 @@ function Mobile() {
           <span className="rounded w-full py-2 px-2 text-xs flex gap-1 items-center justify-between cursor-pointer hover:bg-gray-800 transition-all duration-300">
             <span className="flex gap-2 items-center justify-center text-sm font-bold">
               <img
-                src="/user.jpeg"
+                src={userImage}
                 alt="user"
                 className="w-8 h-8 object-cover rounded-sm"
               />
-              Ritesh
+              User
             </span>
             <span className="rounded-md  px-1.5 py-0.5 text-xs font-medium uppercase text-gray-500">
               <SlOptions />
