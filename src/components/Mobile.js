@@ -4,7 +4,7 @@ import { FiUser, FiMessageSquare } from "react-icons/fi";
 import { SlOptions } from "react-icons/sl";
 import { MdClose } from "react-icons/md";
 import { ContextApp } from "../utils/Context";
-import userImage from './image/user.jpeg'
+import userImage from './image/R1.svg'
 function Mobile() {
   const { Mobile, setMobile, handleQuery } = useContext(ContextApp);
   return (
