@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Box,
-  Input,
+
   Button,
   useToast,
   Flex,
@@ -16,20 +16,17 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  RadioGroup,
-  Stack,
+ 
   Checkbox,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import Dashboard from './dashboard';
 
 export default function Settings() {
-  const [fileData, setFileData] = useState([]);
-  const [radioSelections, setRadioSelections] = useState({});
+ 
   const [tableType, setTableType] = useState(null);
   const [backendData, setBackendData] = useState([]);
   const [checkData, setCheckData] = useState({});
-  const[present, setPresent] = useState([]);
   const toast = useToast();
 
   const fetchAttendance = async (isPresent) => {
@@ -46,9 +43,7 @@ export default function Settings() {
         }
       );
       
-      console.log('Attendance response data:', response.data);
-      console.log(" present data ", response?.data);
-     
+      console.log('Attendance response data:', response.data?.data)
       setBackendData(response?.data || []);
     } catch (error) {
       console.error('Error fetching attendance:', error);
@@ -246,10 +241,11 @@ export default function Settings() {
             {backendData.map((row, index) => (
               <Tr key={index}>
                  <Td>{index===0 ? 1: index+1}</Td>
-                <Td>{row?.name}</Td>
-                <Td>{row?.email}</Td>
-                <Td>{row?.attendance}</Td>
-                <Td>{row?.today}  </Td>
+                <Td>{row.name  }</Td>
+                <Td>{row.emai}</Td>
+                <Td>{row.attendance}</Td>
+                <Td>{row.todad}</Td>    
+
               </Tr>
             ))}
           </Tbody>
