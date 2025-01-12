@@ -257,7 +257,7 @@ export default function Settings() {
     }
 
       </Box>
-      { !tableType ||  backendData.length<= 0  && <Dashboard />}
+      { !tableType &&  backendData.length<= 0  && <Dashboard />}
     </Box>
   );
 }
