@@ -29,20 +29,26 @@ export default function Settings() {
   const [tableType, setTableType] = useState(null);
   const [backendData, setBackendData] = useState([]);
   const [checkData, setCheckData] = useState({});
+  const[present, setPresent] = useState([]);
   const toast = useToast();
 
   const fetchAttendance = async (isPresent) => {
     try {
-      const response = await axios.get(
-        `https://x8ki-letl-twmt.n7.xano.io/api:V6Q6GSfP/getstudentdetail  `,
+      const response = await axios.post(
+        'https://x8ki-letl-twmt.n7.xano.io/api:V6Q6GSfP/getstudentdetail',
         {
-         check: isPresent ,
+          check: isPresent, // Data to be sent
+        },
+        {
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json', // Correct placement of headers
           },
         }
       );
+      
       console.log('Attendance response data:', response.data);
+      console.log(" present data ", response?.data);
+     
       setBackendData(response?.data || []);
     } catch (error) {
       console.error('Error fetching attendance:', error);
@@ -240,10 +246,10 @@ export default function Settings() {
             {backendData.map((row, index) => (
               <Tr key={index}>
                  <Td>{index===0 ? 1: index+1}</Td>
-                <Td>{row.name}</Td>
-                <Td>{row.email}</Td>
-                <Td>{row.attendance}</Td>
-                <Td>{row.today}</Td>
+                <Td>{row?.name}</Td>
+                <Td>{row?.email}</Td>
+                <Td>{row?.attendance}</Td>
+                <Td>{row?.today}  </Td>
               </Tr>
             ))}
           </Tbody>
