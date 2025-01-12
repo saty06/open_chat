@@ -4,8 +4,7 @@ import {
   Button,
   Flex,
   Icon,
-  Image,
-  Link,
+ 
   Menu,
   MenuButton,
   MenuItem,
@@ -16,22 +15,21 @@ import {
   useToast,
   Alert,
   AlertIcon,
-  AlertTitle,
-  AlertDescription,
+ 
   Stack,
 } from '@chakra-ui/react';
 
 import axios from 'axios';
 
 // Custom Components
-import { ItemContent } from 'components/menu/ItemContent';
+
 import { SearchBar } from 'components/navbar/searchBar/SearchBar';
 import { SidebarResponsive } from 'components/sidebar/Sidebar';
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 
 // Assets
-import navImage from 'assets/img/layout/Navbar.png';
+
 import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
 import { IoMdMoon, IoMdSunny } from 'react-icons/io';
 import { FaEthereum } from 'react-icons/fa';
