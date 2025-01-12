@@ -162,7 +162,6 @@ export default function ComplexTable(props) {
     debugTable: true,
   });
   return (
-    
     <Card
       flexDirection="column"
       w="100%"
@@ -245,7 +244,5 @@ export default function ComplexTable(props) {
         </Table>
       </Box>
     </Card>
-    
-    
   );
 }

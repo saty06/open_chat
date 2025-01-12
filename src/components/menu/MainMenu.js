@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
+
+// Chakra imports
 import {
   Icon,
   Flex,
@@ -9,82 +11,30 @@ import {
   MenuList,
   useDisclosure,
   useColorModeValue,
-  useToast,
-  Box,
-  Input,
-  HStack,
 } from "@chakra-ui/react";
-import { MdOutlineMoreHoriz } from "react-icons/md";
+// Assets
+import {
+  MdOutlineMoreHoriz,
+  MdOutlinePerson,
+  MdOutlineCardTravel,
+  MdOutlineLightbulb,
+  MdOutlineSettings,
+} from "react-icons/md";
 
 export default function Banner(props) {
-  const toast = useToast();
   const { ...rest } = props;
-const[fileData, setFileData] = useState()
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (file.type === "text/csv") {
-        const reader = new FileReader();
-  
-        // Event listener to process the file once it's read
-        reader.onload = (e) => {
-          const fileContent = e.target.result; // File content as a string
-          console.log("CSV File Content:", fileContent);
-  
-          // Example: Parse CSV data (basic splitting by lines and commas)
-          const rows = fileContent.split("\n").map((row) => row.split(","));
-          setFileData(rows)
-          console.log("Parsed CSV Data:", rows);
-  
-          // Add your CSV processing logic here
-        };
-  
-        reader.onerror = (e) => {
-          console.error("Error reading file:", e.target.error);
-          toast({
-            title: "Error",
-            description: "An error occurred while reading the file.",
-            status: "error",
-            duration: 3000,
-            isClosable: true,
-          });
-        };
-  
-        // Read the file as text
-        reader.readAsText(file);
-  
-        toast({
-          title: "File Uploaded",
-          description: `${file.name} uploaded successfully!`,
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-      } else {
-        toast({
-          title: "Invalid File",
-          description: "Please upload a valid CSV file.",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    }
-  };
-  
-
-  const openFilePicker = () => {
-    document.getElementById("file-upload").click();
-  };
-
-  const {
-    isOpen: isOpen1,
-    onOpen: onOpen1,
-    onClose: onClose1,
-  } = useDisclosure();
 
   const textColor = useColorModeValue("secondaryGray.500", "white");
+  const textHover = useColorModeValue(
+    { color: "secondaryGray.900", bg: "unset" },
+    { color: "secondaryGray.500", bg: "unset" }
+  );
   const iconColor = useColorModeValue("brand.500", "white");
+  const bgList = useColorModeValue("white", "whiteAlpha.100");
+  const bgShadow = useColorModeValue(
+    "14px 17px 40px 4px rgba(112, 144, 176, 0.08)",
+    "unset"
+  );
   const bgButton = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const bgHover = useColorModeValue(
     { bg: "secondaryGray.400" },
@@ -95,40 +45,120 @@ const[fileData, setFileData] = useState()
     { bg: "whiteAlpha.100" }
   );
 
+  // Ellipsis modals
+  const {
+    isOpen: isOpen1,
+    onOpen: onOpen1,
+    onClose: onClose1,
+  } = useDisclosure();
+
   return (
     <Menu isOpen={isOpen1} onClose={onClose1}>
-      <Box>
-        <HStack wrap="wrap" gap="6">
-          <MenuButton
-            align="center"
-            justifyContent="center"
-            bg={bgButton}
-            _hover={bgHover}
-            _focus={bgFocus}
-            _active={bgFocus}
-            w="37px"
-            h="37px"
-            lineHeight="100%"
-            onClick={onOpen1}
-            borderRadius="10px"
-            {...rest}
-          >
-            <Icon as={MdOutlineMoreHoriz} color={iconColor} w="24px" h="24px" />
-          </MenuButton>
-        </HStack>
-
-        <MenuList>
-          <MenuItem onClick={openFilePicker}>Upload CSV</MenuItem>
-        </MenuList>
-
-        <Input
-          id="file-upload"
-          type="file"
-          accept=".csv"
-          display="none"
-          onChange={handleFileUpload}
-        />
-      </Box>
+      <MenuButton
+        align='center'
+        justifyContent='center'
+        bg={bgButton}
+        _hover={bgHover}
+        _focus={bgFocus}
+        _active={bgFocus}
+        w='37px'
+        h='37px'
+        lineHeight='100%'
+        onClick={onOpen1}
+        borderRadius='10px'
+        {...rest}>
+        <Icon as={MdOutlineMoreHoriz} color={iconColor} w='24px' h='24px' />
+      </MenuButton>
+      <MenuList
+        w='150px'
+        minW='unset'
+        maxW='150px !important'
+        border='transparent'
+        backdropFilter='blur(63px)'
+        bg={bgList}
+        boxShadow={bgShadow}
+        borderRadius='20px'
+        p='15px'>
+        <MenuItem
+          transition='0.2s linear'
+          color={textColor}
+          _hover={textHover}
+          p='0px'
+          borderRadius='8px'
+          _active={{
+            bg: "transparent",
+          }}
+          _focus={{
+            bg: "transparent",
+          }}
+          mb='10px'>
+          <Flex align='center'>
+            <Icon as={MdOutlinePerson} h='16px' w='16px' me='8px' />
+            <Text fontSize='sm' fontWeight='400'>
+              Panel 1
+            </Text>
+          </Flex>
+        </MenuItem>
+        <MenuItem
+          transition='0.2s linear'
+          p='0px'
+          borderRadius='8px'
+          color={textColor}
+          _hover={textHover}
+          _active={{
+            bg: "transparent",
+          }}
+          _focus={{
+            bg: "transparent",
+          }}
+          mb='10px'>
+          <Flex align='center'>
+            <Icon as={MdOutlineCardTravel} h='16px' w='16px' me='8px' />
+            <Text fontSize='sm' fontWeight='400'>
+              Panel 2
+            </Text>
+          </Flex>
+        </MenuItem>
+        <MenuItem
+          transition='0.2s linear'
+          p='0px'
+          borderRadius='8px'
+          color={textColor}
+          _hover={textHover}
+          _active={{
+            bg: "transparent",
+          }}
+          _focus={{
+            bg: "transparent",
+          }}
+          mb='10px'>
+          <Flex align='center'>
+            <Icon as={MdOutlineLightbulb} h='16px' w='16px' me='8px' />
+            <Text fontSize='sm' fontWeight='400'>
+              Panel 3
+            </Text>
+          </Flex>
+        </MenuItem>
+        <MenuItem
+          transition='0.2s linear'
+          color={textColor}
+          _hover={textHover}
+          p='0px'
+          borderRadius='8px'
+          _active={{
+            bg: "transparent",
+          }}
+          _focus={{
+            bg: "transparent",
+          }}>
+          <Flex align='center'>
+            <Icon as={MdOutlineSettings} h='16px' w='16px' me='8px' />
+            <Text fontSize='sm' fontWeight='400'>
+              Panel 4
+            </Text>
+          </Flex>
+        </MenuItem>
+      </MenuList>
     </Menu>
   );
 }

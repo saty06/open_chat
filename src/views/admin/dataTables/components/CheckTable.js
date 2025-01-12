@@ -11,7 +11,6 @@ import {
   Th,
   Thead,
   Tr,
-  Input,
   useColorModeValue,
 } from '@chakra-ui/react';
 import * as React from 'react';
@@ -30,21 +29,13 @@ import Menu from 'components/menu/MainMenu';
 
 const columnHelper = createColumnHelper();
 
+// const columns = columnsDataCheck;
 export default function CheckTable(props) {
   const { tableData } = props;
   const [sorting, setSorting] = React.useState([]);
-  const [data, setData] = React.useState(() => [...tableData]);
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
-
-  // Handle Input Changes in Table
-  const handleInputChange = (rowIndex, newValue) => {
-    const updatedData = data.map((row, index) =>
-      index === rowIndex ? { ...row, quantity: newValue } : row
-    );
-    setData(updatedData);
-  };
-
+  let defaultData = tableData;
   const columns = [
     columnHelper.accessor('name', {
       id: 'name',
@@ -101,21 +92,11 @@ export default function CheckTable(props) {
           QUANTITY
         </Text>
       ),
-      cell: (info) => {
-        const rowIndex = info.row.index; // Get the row index
-        return (
-          <Input
-            value={data[rowIndex]?.quantity || ''}
-            onChange={(e) => handleInputChange(rowIndex, e.target.value)}
-            size="sm"
-            color={textColor}
-            fontSize="sm"
-            fontWeight="700"
-            type="number"
-            placeholder="Enter quantity"
-          />
-        );
-      },
+      cell: (info) => (
+        <Text color={textColor} fontSize="sm" fontWeight="700">
+          {info.getValue()}
+        </Text>
+      ),
     }),
     columnHelper.accessor('date', {
       id: 'date',
@@ -136,7 +117,7 @@ export default function CheckTable(props) {
       ),
     }),
   ];
-
+  const [data, setData] = React.useState(() => [...defaultData]);
   const table = useReactTable({
     data,
     columns,
@@ -148,13 +129,11 @@ export default function CheckTable(props) {
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
   });
-
   return (
     <Card
       flexDirection="column"
-      w="200%"
+      w="100%"
       px="0px"
-      h="100%"
       overflowX={{ sm: 'scroll', lg: 'hidden' }}
     >
       <Flex px="25px" mb="8px" justifyContent="space-between" align="center">
@@ -192,11 +171,12 @@ export default function CheckTable(props) {
                       >
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
-                        {header.column.getIsSorted() ? (
-                          header.column.getIsSorted() === 'asc' ? '↑' : '↓'
-                        ) : null}
+                        {{
+                          asc: '',
+                          desc: '',
+                        }[header.column.getIsSorted()] ?? null}
                       </Flex>
                     </Th>
                   );
@@ -205,27 +185,30 @@ export default function CheckTable(props) {
             ))}
           </Thead>
           <Tbody>
-            {table.getRowModel().rows.slice(0, 11).map((row) => {
-              return (
-                <Tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => {
-                    return (
-                      <Td
-                        key={cell.id}
-                        fontSize={{ sm: '14px' }}
-                        minW={{ sm: '150px', md: '200px', lg: 'auto' }}
-                        borderColor="transparent"
-                      >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </Td>
-                    );
-                  })}
-                </Tr>
-              );
-            })}
+            {table
+              .getRowModel()
+              .rows.slice(0, 11)
+              .map((row) => {
+                return (
+                  <Tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => {
+                      return (
+                        <Td
+                          key={cell.id}
+                          fontSize={{ sm: '14px' }}
+                          minW={{ sm: '150px', md: '200px', lg: 'auto' }}
+                          borderColor="transparent"
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </Td>
+                      );
+                    })}
+                  </Tr>
+                );
+              })}
           </Tbody>
         </Table>
       </Box>

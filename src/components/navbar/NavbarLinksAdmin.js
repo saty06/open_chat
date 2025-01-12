@@ -4,7 +4,8 @@ import {
   Button,
   Flex,
   Icon,
- 
+  Image,
+  Link,
   Menu,
   MenuButton,
   MenuItem,
@@ -12,177 +13,22 @@ import {
   Text,
   useColorModeValue,
   useColorMode,
-  useToast,
-  Alert,
-  AlertIcon,
- 
-  Stack,
 } from '@chakra-ui/react';
-
-import axios from 'axios';
-
 // Custom Components
-
+import { ItemContent } from 'components/menu/ItemContent';
 import { SearchBar } from 'components/navbar/searchBar/SearchBar';
 import { SidebarResponsive } from 'components/sidebar/Sidebar';
 import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
-
+import React from 'react';
 // Assets
-
+import navImage from 'assets/img/layout/Navbar.png';
 import { MdNotificationsNone, MdInfoOutline } from 'react-icons/md';
 import { IoMdMoon, IoMdSunny } from 'react-icons/io';
 import { FaEthereum } from 'react-icons/fa';
 import routes from 'routes';
-
-import { useGoogleLogin } from '@react-oauth/google';
-
 export default function HeaderLinks(props) {
   const { secondary } = props;
   const { colorMode, toggleColorMode } = useColorMode();
-  const [user, setUser] = useState([]);
-  const [profile, setProfile] = useState();
-  const [notification, setNotification] = useState();
-  const toast = useToast();
-
-  const login = useGoogleLogin({
-    onSuccess: (tokenResponse) => setUser(tokenResponse),
-    onError: (error) => console.error('Login Failed:', error),
-  });
-  const fetchGoogleUserInfo = async (accessToken) => {
-    try {
-      const userInfo = await axios.get(
-        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            Accept: 'application/json',
-          },
-        },
-      );
-      return userInfo.data;
-    } catch (error) {
-      console.error('Error fetching Google user info:', error);
-
-      throw error;
-    }
-  };
-  const handleSubmitcheck = async () => {
-    try {
-      const token = localStorage.getItem('authToken');
-      const response = await axios.post(
-        'http://localhost:3000/api/v1/users/calculate-profit-loss',
-        {}, // Empty body, as you're not sending data
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-
-      setNotification(response?.data?.result);
-      console.log('Response data: ', response?.data?.result);
-
-      // Check the response for success or failure
-      if (response.status === 200) {
-        console.log('Backend data: ', response);
-        toast({
-          title: 'Fetched notification data',
-          description:
-            'The table data and selections have been sent to the backend successfully.',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-        });
-      } else {
-        toast({
-          title: 'Submission Failed to notification data',
-          description: 'There was an issue with submitting the data.',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
-      }
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'An error occurred while sending the data to the backend.',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-      console.error('Error submitting data:', error);
-    }
-  };
-
-  const addUserToBackend = async (userData) => {
-    try {
-      const response = await axios.post(
-        'http://localhost:3000/api/v1/users',
-        userData,
-        {
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-      toast({
-        title: 'Login successfull',
-        description: 'User data has been successfully saved.',
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-        position: 'top-right',
-      });
-      // Extract the token
-      const token = response?.data?.token;
-
-      // Store the token in localStorage
-      localStorage.setItem('authToken', token);
-
-      // Optionally, you can verify if the token was stored correctly
-
-      return response.data;
-    } catch (error) {
-      console.error('Error adding user to backend:', error);
-      toast({
-        title: 'Backend Error',
-        description: 'Failed to save user data to the backend.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-        position: 'top-right',
-      });
-      throw error;
-    }
-  };
-
-  useEffect(() => {
-    if (user) {
-      (async () => {
-        try {
-          const profileData = await fetchGoogleUserInfo(user.access_token);
-          setProfile(profileData);
-
-          const newUser = {
-            firstName: profileData.given_name,
-            lastName: profileData.family_name,
-            email: profileData.email,
-            google_picture: profileData.picture,
-            google_id: profileData.id,
-          };
-
-          const response = await addUserToBackend(newUser);
-          console.log('User added to backend:', response);
-        } catch (error) {
-          console.error('Error in Google Login flow:', error);
-        }
-      })();
-    }
-  }, [user]);
-
   // Chakra Color Mode
   const navbarIcon = useColorModeValue('gray.400', 'white');
   let menuBg = useColorModeValue('white', 'navy.800');
@@ -262,7 +108,6 @@ export default function HeaderLinks(props) {
             w="18px"
             h="18px"
             me="10px"
-            // onClick={handleSubmitcheck}
           />
         </MenuButton>
         <MenuList
@@ -286,7 +131,6 @@ export default function HeaderLinks(props) {
               color={textColorBrand}
               ms="auto"
               cursor="pointer"
-              onClick={handleSubmitcheck}
             >
               Mark all read
             </Text>
@@ -299,53 +143,9 @@ export default function HeaderLinks(props) {
               borderRadius="8px"
               mb="10px"
             >
-              {notification != null &&
-                notification?.map((value, index) => {
-                  return (
-                    <>
-                      <Stack spacing={3} key={index}>
-                        <Alert status="success">
-                          <AlertIcon />
-                          Data uploaded to the server. {value?.totalProfitLoss}
-                        </Alert>
-                        <Alert status="success">
-                          <AlertIcon />
-                          Data uploaded to the server.{' '}
-                          {value?.portfolioPercentageChangeData}
-                        </Alert>
-                      </Stack>
-                    </>
-                  );
-                })}
-              {notification == null && (
-                <>
-                  <Stack spacing={3}>
-                    <Alert status="error">
-                      <AlertIcon />
-                      There was an error processing your request
-                    </Alert>
-
-                    <Alert status="success">
-                      <AlertIcon />
-                      Data uploaded to the server. Fire on!
-                    </Alert>
-
-                    <Alert status="warning">
-                      <AlertIcon />
-                      Seems your account is about expire, upgrade now
-                    </Alert>
-
-                    <Alert status="info">
-                      <AlertIcon />
-                      Chakra is going live on August 30th. Get ready!
-                    </Alert>
-                  </Stack>
-                </>
-              )}
-
-              {/* <Button onClick={handleSubmitcheck}  > click me </Button> */}
+              <ItemContent info="Horizon UI Dashboard PRO" />
             </MenuItem>
-            {/* <MenuItem
+            <MenuItem
               _hover={{ bg: 'none' }}
               _focus={{ bg: 'none' }}
               px="0"
@@ -353,10 +153,73 @@ export default function HeaderLinks(props) {
               mb="10px"
             >
               <ItemContent info="Horizon Design System Free" />
-            </MenuItem> */}
+            </MenuItem>
           </Flex>
         </MenuList>
       </Menu>
+
+      <Menu>
+        <MenuButton p="0px">
+          <Icon
+            mt="6px"
+            as={MdInfoOutline}
+            color={navbarIcon}
+            w="18px"
+            h="18px"
+            me="10px"
+          />
+        </MenuButton>
+        <MenuList
+          boxShadow={shadow}
+          p="20px"
+          me={{ base: '30px', md: 'unset' }}
+          borderRadius="20px"
+          bg={menuBg}
+          border="none"
+          mt="22px"
+          minW={{ base: 'unset' }}
+          maxW={{ base: '360px', md: 'unset' }}
+        >
+          <Image src={navImage} borderRadius="16px" mb="28px" />
+          <Flex flexDirection="column">
+            <Link w="100%" href="https://horizon-ui.com/pro">
+              <Button w="100%" h="44px" mb="10px" variant="brand">
+                Buy Horizon UI PRO
+              </Button>
+            </Link>
+            <Link
+              w="100%"
+              href="https://horizon-ui.com/documentation/docs/introduction"
+            >
+              <Button
+                w="100%"
+                h="44px"
+                mb="10px"
+                border="1px solid"
+                bg="transparent"
+                borderColor={borderButton}
+              >
+                See Documentation
+              </Button>
+            </Link>
+            <Link
+              w="100%"
+              href="https://github.com/horizon-ui/horizon-ui-chakra-ts"
+            >
+              <Button
+                w="100%"
+                h="44px"
+                variant="no-hover"
+                color={textColor}
+                bg="transparent"
+              >
+                Try Horizon Free
+              </Button>
+            </Link>
+          </Flex>
+        </MenuList>
+      </Menu>
+
       <Button
         variant="no-hover"
         bg="transparent"
@@ -407,7 +270,7 @@ export default function HeaderLinks(props) {
               fontWeight="700"
               color={textColor}
             >
-              👋&nbsp; Hey, {user ? user.given_name : ' DUDE '}
+              👋&nbsp; Hey, Adela
             </Text>
           </Flex>
           <Flex flexDirection="column" p="10px">
@@ -425,9 +288,7 @@ export default function HeaderLinks(props) {
               borderRadius="8px"
               px="14px"
             >
-              <Text fontSize="sm" onClick={() => login()} color="green">
-                Login
-              </Text>
+              <Text fontSize="sm">Newsletter Settings</Text>
             </MenuItem>
             <MenuItem
               _hover={{ bg: 'none' }}
@@ -436,10 +297,7 @@ export default function HeaderLinks(props) {
               borderRadius="8px"
               px="14px"
             >
-              {/* <Text fontSize="sm">Log out</Text> */}
-              <Text fontSize="sm" color="red">
-                Logout
-              </Text>
+              <Text fontSize="sm">Log out</Text>
             </MenuItem>
           </Flex>
         </MenuList>
