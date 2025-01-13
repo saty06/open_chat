@@ -28,6 +28,7 @@ export default function Settings() {
   const [tableType, setTableType] = useState(null);
   const [backendData, setBackendData] = useState([]);
   const [checkData, setCheckData] = useState({});
+  const[present, setPresent] = useState([])
   const toast = useToast();
 
   const fetchAttendance = async (isPresent) => {
@@ -44,8 +45,13 @@ export default function Settings() {
         }
       );
       
-      console.log('Attendance response data:', response.data?.data)
-      setBackendData(response?.data || []);
+      console.log('Attendance response data:', response?.data)
+      setBackendData(response?.data);
+      if(isPresent===true){
+        setPresent((backendData.flat(Infinity)))
+      }
+  
+      console.log( " data will access  from the xeno", response?.data[0]);
     } catch (error) {
       console.error('Error fetching attendance:', error);
       toast({
@@ -102,6 +108,7 @@ export default function Settings() {
       return updatedData;
     });
   };
+   console.log("  present  data",present)
 
   return (
     <Box style={{ alignItems: 'center' }}>
@@ -144,7 +151,7 @@ export default function Settings() {
                 </Tr>
               </Thead>
               <Tbody>
-                {backendData.map((row, index) => (
+                {backendData.map((row, index) => (                   
                   <Tr key={index}>
                     <Td>{index===0 ? 1: index+1}</Td>
                     <Td>{row.Name}</Td>
@@ -214,7 +221,8 @@ export default function Settings() {
                 </Tr>
               </Thead>
               <Tbody>
-                {backendData.map((row, index) => (
+               
+              {backendData.map((row, index) => (
                   <Tr key={index}>
                      <Td>{index===0 ? 1: index+1}</Td>
                     <Td>{row.Name}</Td>
@@ -229,7 +237,7 @@ export default function Settings() {
       )
     }
     {
-      backendData.length>0 &&  tableType==='present'&& (
+      backendData.length>0 &&  present.length>0 &&  tableType==='present'&& (
         <TableContainer>
         <Table size="lg" bg="gray.500">
           <Thead bg="gray.200">
@@ -243,13 +251,13 @@ export default function Settings() {
             </Tr>
           </Thead>
           <Tbody>
-            {backendData.map((row, index) => (
+            {present.map((row, index) => (
               <Tr key={index}>
                  <Td>{index===0 ? 1: index+1}</Td>
-                <Td>{row.name  }</Td>
-                <Td>{row.emai}</Td>
+                <Td>{row.name}</Td>
+                <Td>{row.email}</Td>
                 <Td>{row.attendance}</Td>
-                <Td>{row.todad}</Td>    
+                <Td>{row.today}</Td>    
 
               </Tr>
             ))}
